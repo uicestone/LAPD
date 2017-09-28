@@ -1,0 +1,31 @@
+{
+  "name": "lapd",
+  "version": "1.0.0",
+  "description": "Pod for Lawyers & Assistants",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uicestone/LAPD.git"
+  },
+  "author": "Uice Lu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/uicestone/LAPD/issues"
+  },
+  "homepage": "https://github.com/uicestone/LAPD#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "compression": "^1.7.1",
+    "cors": "^2.8.4",
+    "express": "^4.15.5",
+    "iconv-lite": "^0.4.19",
+    "jquery": "^3.2.1",
+    "jsdom": "^11.2.0",
+    "mongoose": "^4.11.13",
+    "node-env-file": "^0.1.8",
+    "socket.io": "^2.0.3"
+  }
+}
