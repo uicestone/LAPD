@@ -154,27 +154,59 @@ async function getList (cat, currentPage) {
 	});
 }
 
-async function getPage (url) {
-
+async function getDetail (qa) {	
+	// console.log(`get ${qa.url}`);
+	const html = await httpGet(qa.url);
+	const { window } = new JSDOM(html);
+	const $ = jQuery(window);
+	const content = $('.content').html();
+	if (!content) {
+		console.warn(`no content find in page: ${qa.url}`);
+		return;
+	}
+	qa.a = content;
+	qa.a = qa.a.replace(/\s*<div class="gg200x300">[\s\S]*?<\/div>\s*/g, '');
+	qa.a = qa.a.replace(/<p>　　<strong>相关阅读：<\/strong><\/p>[\s\S]*<a href="http:\/\/www.fabang.com"><img src="http:\/\/www.fabang.com\/favicon.ico" alt=""><\/a>/, '');
+	qa.a = qa.a.replace(/<img.*?>/g, '');
+	qa.a = qa.a.replace(/ style="text-align: center;"/g, '');
+	// console.log(qa.a);
+	return qa.save();
 }
 
-cats.forEach(async cat => {
-	try {
-		const { totalPages, catNum } = await getFirstList(cat);
-		cat.totalPages = totalPages;
-		cat.num = catNum;
-		let currentPage = 1;
-		while (currentPage <= totalPages) {
-			try {
-				await getList(cat, currentPage)
-				currentPage++;
-			}
-			catch (e) {
-				console.error(e);
-			}
-		}
-	}
-	catch (e) {
-		console.error(cat.label, e);
-	}
+// cats.forEach(async cat => {
+// 	try {
+// 		const { totalPages, catNum } = await getFirstList(cat);
+// 		cat.totalPages = totalPages;
+// 		cat.num = catNum;
+// 		let currentPage = 1;
+// 		while (currentPage <= totalPages) {
+// 			try {
+// 				await getList(cat, currentPage)
+// 				currentPage++;
+// 			}
+// 			catch (e) {
+// 				console.error(e);
+// 			}
+// 		}
+// 	}
+// 	catch (e) {
+// 		console.error(cat.label, e);
+// 	}
+// });
+
+const queue = [];
+
+Qa.find({a: {$exists: false}}).cursor().on('data', qa => {
+	queue.push(qa);
 });
+
+setInterval(() => {
+	const qa = queue.shift()
+	
+	if (!qa) {
+		// process.exit();
+		return;
+	}
+
+	getDetail(qa);
+}, 1000);
