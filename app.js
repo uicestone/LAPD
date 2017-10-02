@@ -32,31 +32,45 @@ async function httpGet (url) {
 			const { statusCode } = res;
 			const contentType = res.headers['content-type'];
 
-			let error;
-			if (statusCode !== 200) {
-				error = new Error(`Request Failed (${statusCode}). URL: ${url}`);
-			}
-			if (error) {
-				console.error(error.message);
-				// consume response data to free up memory
-				res.resume();
-				return;
-			}
-
 			// res.setEncoding('utf8');
 			const chunks = [];
 			res.on('data', (chunk) => { chunks.push(chunk); });
 			res.on('end', () => {
+				
 				const rawData = iconvDecode(Buffer.concat(chunks), 'gb2312').toString();
+				
+				if (statusCode !== 200) {
+					
+					const e = {status: statusCode, message: `Request Failed (${statusCode}). URL: ${url}`};
+					console.error(e.message);
+					
+					// consume response data to free up memory
+					res.resume();
+
+					if (statusCode === 403 && rawData.match(/openresty/)) {
+						console.error('IP blocked.');
+						process.exit();
+					}
+					reject(e);
+				}
+
 				resolve(rawData);
 			});
 			
 		}).on('error', (e) => {
-			reject(e.message);
+			reject(e);
 		});
 
 	});
 };
+
+async function sleep(milliseconds) {
+	return new Promise(resolve => {
+		setTimeout(() => {
+			resolve();
+		}, milliseconds);
+	});
+}
 
 const cats = [
 	{label: "婚姻家庭", uri: "/zhishi/hunyin/"},
@@ -162,7 +176,7 @@ async function getDetail (qa) {
 	const content = $('.content').html();
 	if (!content) {
 		console.warn(`no content find in page: ${qa.url}`);
-		return;
+		return await qa.remove();
 	}
 	qa.a = content;
 	qa.a = qa.a.replace(/\s*<div class="gg200x300">[\s\S]*?<\/div>\s*/g, '');
@@ -185,7 +199,7 @@ async function getDetail (qa) {
 // 				currentPage++;
 // 			}
 // 			catch (e) {
-// 				console.error(e);
+// 				console.error(e.message);
 // 			}
 // 		}
 // 	}
@@ -200,13 +214,21 @@ Qa.find({a: {$exists: false}}).cursor().on('data', qa => {
 	queue.push(qa);
 });
 
-setInterval(() => {
-	const qa = queue.shift()
-	
-	if (!qa) {
-		// process.exit();
-		return;
-	}
+setTimeout(() => {
+	getQueueDetail(queue);
+}, 100);
 
-	getDetail(qa);
-}, 1000);
+async function getQueueDetail(queue) {
+	const qa = queue.shift();
+	try {
+		await getDetail(qa);
+	}
+	catch (e) {
+		if (e.status === 403 || e.status === 404) {
+			await qa.remove();
+			console.log(`Removed ${qa.url}`);
+		}
+	}
+	await sleep(1000);
+	getQueueDetail(queue);
+}
