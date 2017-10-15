@@ -7,7 +7,8 @@ const qaSchema = new Schema({
     date: Date,
     cat: String,
     tags: [String],
-    url: String
+    url: String,
+    source: String
 });
 
 qaSchema.index({url: 1}, {unique: true});
