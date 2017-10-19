@@ -40,6 +40,11 @@ async function httpGet (url) {
 				const rawData = iconvDecode(Buffer.concat(chunks), 'gb2312').toString();
 				
 				if (statusCode !== 200) {
+
+					if (statusCode === 302) {
+						resolve(httpGet(res.headers['location']));
+						return;
+					}
 					
 					const e = {status: statusCode, message: `Request Failed (${statusCode}). URL: ${url}`};
 					console.error(e.message);
