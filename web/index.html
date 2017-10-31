@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta name="author" content="上海雍熙信息技术有限公司提供技术支持,http://www.yongsy.com" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<meta name="renderer" content="webkit">
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+	<title>title</title>
+	<link href="css/slick.css"  rel="stylesheet"/>
+	<link href="css/slick-theme.css"  rel="stylesheet"/>
+	<link rel="stylesheet" href="css/base-v1.3.css">
+
+	<!--HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries-->
+	<!--[if lt IE 9]>
+	<script src="http://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+	<script src="http://cdn.bootcss.com/respond/1.4.2/respond.min.js"></script>
+	<![endif]-->
+	<!--Favicons-->
+	<style>
+		html,body{
+			width: 100%;
+			height: 100%;
+		}
+		.wrep{
+			width: 100%;
+			height: 100%;
+			position: relative;
+			overflow: hidden;
+		}
+		.img{
+			transform: translateX(-50%);
+			position: relative;
+			left: 50%;
+			top: 0%;
+		}
+		.con{
+			width: 840px;
+			height: 640px;
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			margin-left: -420px;
+			margin-top: -320px;
+			z-index: 500;
+			background: rgba(255,255,255,0.8);
+		}
+		@media screen and (max-width: 850px){
+			.con{
+				width: 100%;
+				position: absolute;
+				left: 0%;
+				top: 50%;
+				margin-left: 0px;
+				margin-top:-320px;
+				z-index: 500;
+			}
+		}
+		@media screen and (max-width:767px){
+			.con{
+				width: 100%;
+				height: 100%;
+				position: absolute;
+				left: 0%;
+				top: 0%;
+				margin-left: 0px;
+				margin-top:0px;
+				z-index: 500;
+			}
+		}
+		.con .top p{
+			width: 100%;
+			height: 50px;
+			color:#10427a;
+			font-size: 16px;
+			line-height: 50px;
+			padding-left: 35px;
+		}
+		@media screen and (max-width:767px){
+			.con .top p{
+				padding-left: 15px;
+			}
+		}
+		.content{
+			width: 100%;
+			height: 420px;
+			padding-top: 30px;
+		}
+		@media screen and (max-width:767px){
+			.content{
+				height: calc(100% - 220px);
+			}
+		}
+		.content .kuang{
+			width: 100%;
+		}
+		.content .kuang + .kuang{
+			margin-top: 35px;
+		}
+		.content .left{
+			float: left;
+			width: 540px;
+			margin-left: 35px;
+		}
+		@media screen and (max-width:767px){
+			.content .left{
+				margin-left: 15px;
+			}
+		}
+		.content .left .yonghu-img{
+			width: 50px;
+			height: 50px;
+			float: left;
+			border-radius: 50%;
+			margin-right:20px;
+		}
+		.content .left .input{
+			max-width: 450px;
+			height: auto;
+			float: left;
+			margin-top: 15px;
+			border: 1px solid #E8EAF0;
+			padding: 15px 25px;
+			border-radius: 8px;
+			background: #ffffff;
+			position: relative;
+		}
+		@media screen and (max-width:767px){
+			.content .left .input{
+				max-width: 300px;
+				padding: 15px;
+			}
+		}
+		@media screen and (max-width:414px){
+			.content .left .input{
+				max-width: 220px;
+			}
+		}
+		.content .left .input p{
+			color: #666666;
+			font-size: 14px;
+			line-height: 22px;
+		}
+		.content .left .input .jiao{
+			position: absolute;
+			left: -10px;
+			top: 28%;
+			z-index: 50;
+		}
+		.content .right{
+			float: right;
+			width: 540px;
+			margin-right: 35px;
+		}
+		@media screen and (max-width:767px){
+			.content .right{
+				margin-right: 15px;
+			}
+		}
+		.content .right .yonghu-img{
+			width: 50px;
+			height: 50px;
+			float: right;
+			border-radius: 50%;
+			margin-left:20px;
+		}
+		.content .right .input{
+			max-width: 450px;
+			height: auto;
+			float: right;
+			margin-top: 15px;
+			border: 1px solid #E8EAF0;
+			padding: 15px 25px;
+			border-radius: 8px;
+			background: #ffffff;
+			position: relative;
+		}
+		@media screen and (max-width:767px){
+			.content .right .input{
+				max-width: 300px;
+				padding: 15px;
+			}
+		}
+		@media screen and (max-width:414px){
+			.content .right .input{
+				max-width: 220px;
+			}
+		}
+		.content .right .input p{
+			color: #666666;
+			font-size: 14px;
+			line-height: 22px;
+		}
+		.content .right .input .jiao{
+			position: absolute;
+			right: -10px;
+			top: 28%;
+			z-index: 50;
+		}
+		.bottom{
+			width: 100%;
+			height: 170px;
+			position: relative;
+		}
+		.bottom .top{
+			height:50px;
+			line-height: 50px;
+			padding-left: 40px;
+		}
+		@media screen and (max-width:767px){
+			.bottom .top{
+				padding-left: 15px;
+			}
+		}
+		.bottom .top img{
+			display: inline-block;
+			margin-right: 25px;
+		}
+		.bottom .shuru{
+			width: 100%;
+			height: 120px;
+			resize: none;
+			padding: 20px;
+			padding-right: 130px;
+			line-height: 1.25;
+		}
+		.bottom .btn{
+			width: 105px;
+			height: 40px;
+			background:#2B80C9;
+			color: #ffffff;
+			font-size: 16px;
+			position: absolute;
+			right: 10px;
+			bottom:30px;
+			z-index: 50;
+		}
+	</style>
+</head>
+<body>
+
+<div class="wrep">
+	<img src="images/J1.jpg" class="img" alt="">
+	<div class="con">
+		<div class="top"><p>星智客服</p></div>
+		<div class="content clearfix">
+			<div class="kuang clearfix">
+				<div class="left clearfix">
+					<div class="yonghu-img"><img src="images/2_03.png" alt=""></div>
+					<div class="input">
+						<img src="images/6.png" class="jiao" alt="">
+						<p>哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈</p>
+					</div>
+				</div>
+			</div>
+			<div class="kuang clearfix">
+				<div class="right clearfix">
+					<div class="yonghu-img"><img src="images/3_07.png" alt=""></div>
+					<div class="input">
+						<img src="images/6_07.png" class="jiao" alt="">
+						<p>哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈</p>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<div class="bottom">
+			<div class="top">
+				<img src="images/11.png" alt="">
+				<img src="images/12_06.png" alt="">
+			</div>
+			<textarea name="" id=""  class="shuru"></textarea>
+			<button class="btn">发送</button>
+		</div>
+	</div>
+
+</div>
+
+
+<script src="js/jquery-1.12.4.min.js"></script>
+<script src="js/slick.min.js"></script>
+<script src="js/common.js"></script>
+<script type="text/javascript">
+
+
+</script>
+</body>
+</html>
