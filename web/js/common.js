@@ -1,22 +1,37 @@
 var app = new Vue({
 	el: '#app',
 	data: {
-		messages: [
-			{ fromClient:true, text: '学习 JavaScript' },
-			{ text: '学习 Vue' },
-			{ fromClient:true, text: '整个牛项目' }
-		],
-		newMessageText: null
+		messages: [],
+		newMessageText: null,
+		token: null,
+		location: null
+	},
+	created: function () {
+		var v = this;
+		navigator.geolocation.getCurrentPosition(function(result){
+			v.location = `${result.coords.longitude.toFixed(6)},${result.coords.latitude.toFixed(6)}`;
+		});
 	},
 	methods: {
 		sendMessage: function (e) {
+			e.preventDefault();
 			this.messages.push({fromClient: true, text: this.newMessageText});
-			this.newMessageText = null;
-			var that = this;
+			var v = this;
 			setTimeout(function () {
-				var content = that.$el.querySelector(".content");
+				var content = v.$el.querySelector(".content");
 				content.scrollTop = content.scrollHeight;
 			});
+			this.$http.post('/api/qa/query', {
+				text: this.newMessageText,
+				location: this.location
+			}).then(function (data) {
+				this.messages.push({text: data.body.text});
+				setTimeout(function () {
+					var content = v.$el.querySelector(".content");
+					content.scrollTop = content.scrollHeight;
+				});
+			});
+			this.newMessageText = null;
 		}
 	}
-})
+});
