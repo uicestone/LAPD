@@ -25,7 +25,7 @@ var app = new Vue({
 				text: this.newMessageText,
 				location: this.location
 			}).then(function (data) {
-				this.messages.push({text: data.body.text});
+				this.messages.push({text: data.body.text, url: data.body.url});
 				setTimeout(function () {
 					var content = v.$el.querySelector(".content");
 					content.scrollTop = content.scrollHeight;

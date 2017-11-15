@@ -38,6 +38,7 @@
 						<img v-if="!message.fromClient" src="images/6.png" class="jiao" alt="">
 						<p>{{ message.text }}</p>
 						<img v-if="message.fromClient" src="images/6_07.png" class="jiao" alt="">
+						<iframe v-if="message.url" v-bind:src="message.url" style="border:none; height:35vh"></iframe>
 					</div>
 				</div>
 			</div>
