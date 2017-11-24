@@ -48,7 +48,7 @@
 				<img src="images/11.png" alt="">
 				<img src="images/12_06.png" alt="">
 			</div>
-			<textarea name="" id="" class="shuru" v-model="newMessageText" v-on:keyup.enter="sendMessage"></textarea>
+			<textarea name="" id="" class="shuru" v-model="newMessageText" v-on:keypress.enter="sendMessage"></textarea>
 			<button class="btn" v-on:click="sendMessage">发送</button>
 		</div>
 	</div>

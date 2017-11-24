@@ -6,6 +6,10 @@ module.exports = (router) => {
 
     router.route('/qa/query')
         .post(async (req, res) => {
+            if (req.body.text.trim() === '0') {
+                res.json({text:'您的专属律师助理即将为您服务…'});
+                return
+            }
             const amapResult = await amapRGeo(req.body.location);
             const formattedAddress = amapResult.regeocode.formatted_address;
             const tulingResult = await tuLingQuery(req.body.text, formattedAddress/*, userid*/);

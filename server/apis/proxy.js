@@ -36,7 +36,7 @@ function forward(urlString, headers) {
         delete options.headers.referer;
         
         http.request(url, (res) => {
-            console.log(`Got response: ${url}`);
+            // console.log(`Got response: ${url}`);
             const { statusCode } = res;
             const contentType = res.headers['content-type'];
 
