@@ -4,6 +4,7 @@ const cors = require('cors');
 module.exports = (app, router, io) => {
     // register routes
     router = require('./auth.js')(router);
+    router = require('./proxy.js')(router);
     router = require('./qa.js')(router);
     router = require('./user.js')(router);
     router = require('./wechat.js')(router);

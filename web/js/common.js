@@ -25,7 +25,11 @@ var app = new Vue({
 				text: this.newMessageText,
 				location: this.location
 			}).then(function (data) {
-				this.messages.push({text: data.body.text, url: data.body.url});
+				var message = {text: data.body.text};
+				if (data.body.url) {
+					message.url = data.body.url.match(/https:/) ? data.body.url : '/api/proxy?url=' + encodeURIComponent(data.body.url);
+				}
+				this.messages.push(message);
 				setTimeout(function () {
 					var content = v.$el.querySelector(".content");
 					content.scrollTop = content.scrollHeight;
