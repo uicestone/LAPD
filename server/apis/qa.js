@@ -1,6 +1,11 @@
 const http = require('http');
 const Qa = require('../models/qa.js');
 const User = require('../models/user.js');
+const elasticsearch = require('elasticsearch');
+const es = new elasticsearch.Client({
+    host: 'elastic:Xingzong1218@smart.smartstars.cn:8001'
+    // log: 'trace'
+});
 
 module.exports = (router) => {
 
@@ -10,10 +15,24 @@ module.exports = (router) => {
                 res.json({text:'您的专属律师助理即将为您服务…'});
                 return
             }
+
             const amapResult = await amapRGeo(req.body.location);
             const formattedAddress = amapResult.regeocode.formatted_address;
-            const tulingResult = await tuLingQuery(req.body.text, formattedAddress/*, userid*/);
-            res.json(tulingResult);
+            const reply = await tuLingQuery(req.body.text, formattedAddress/*, userid*/);
+
+            esRes = await es.search({
+                index: 'qa_v1',
+                type: 'qa',
+                q: req.body.text
+            });
+
+            console.log(esRes.hits.hits.map(hit => [hit._score, hit._source.q]));
+
+            if (esRes.hits.max_score > 18) {
+                reply.qas = esRes.hits.hits.map(hit => Object.assign({_id: hit._id}, hit._source));
+            }
+
+            res.json(reply);
         });
 
     // Qa CURD

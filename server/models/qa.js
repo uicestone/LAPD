@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const qaSchema = new Schema({
     q: String,
-    a: Boolean,
+    a: String,
     url: String,
     cat: String,
     tags: String,
@@ -11,4 +11,4 @@ const qaSchema = new Schema({
     date: Date
 });
 
-module.exports = mongoose.model('qaOrder', qaSchema);
+module.exports = mongoose.model('Qa', qaSchema);

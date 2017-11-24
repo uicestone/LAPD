@@ -10,9 +10,9 @@ module.exports = (router) => {
         let body = r.body;
         const url = new URL(r.url);
         const prefix = url.protocol + '//' + url.host + '/';
-        body = body.replace(/src="(?!http)/g, `src="${prefix}`);
-        body = body.replace(/href="(?!http)/g, `href="${prefix}`);
-        body = body.replace(/(url"?\()(?!http)/g, `$1${prefix}`);
+        body = body.replace(/src="(?!http)(?!\/\/)/g, `src="${prefix}`);
+        body = body.replace(/href="(?!http)(?!\/\/)/g, `href="${prefix}`);
+        body = body.replace(/(url"?\()(?!http)(?!\/\/)/g, `$1${prefix}`);
         res.send(body);
         res.end();
     });
