@@ -13,8 +13,15 @@ const userSchema = new Schema({
     num: String,
     region: String,
     avatar: String,
+    location: {
+        formattedAddress: String,
+        latitude: Number,
+        longitude: Number,
+        precision: Number,
+        time: Date
+    }
 });
 
-// userSchema.index({mobile:1}, {unique:true, sparse: true});
+userSchema.index({openid:1}, {unique:true, sparse: true});
 
 module.exports = mongoose.model('User', userSchema);
