@@ -1,9 +1,10 @@
-const http = require('http');
 const Qa = require('../models/qa.js');
 const User = require('../models/user.js');
+const tuLingQuery = require('../models/tuling.js');
+const { amapRGeo } = require('../models/amap.js');
 const elasticsearch = require('elasticsearch');
 const es = new elasticsearch.Client({
-    host: 'elastic:Xingzong1218@smart.smartstars.cn:8001'
+    host: process.env.ELASTIC_URL
     // log: 'trace'
 });
 
@@ -120,80 +121,4 @@ module.exports = (router) => {
         });
 
     return router;
-}
-
-function amapRGeo (location) {
-    return new Promise((resolve, reject) => {
-        const reqAmap = http.get(`http://restapi.amap.com/v3/geocode/regeo?parameters&key=${process.env.AMAP_KEY}&location=${location}`, (resAmap) => {
-            // console.log(`STATUS: ${resAmap.statusCode}`);
-            // console.log(`HEADERS: ${JSON.stringify(resAmap.headers)}`);
-            let data = '';
-            resAmap.setEncoding('utf8');
-            resAmap.on('data', (chunk) => {
-                // console.log(`BODY: ${chunk}`);
-                data += chunk;
-            });
-            resAmap.on('end', () => {
-                // console.log('No more data in response.');
-                try {
-                    const result = JSON.parse(data);
-                    // console.log(result);
-                    resolve(result)
-                }
-                catch (err) {
-                    reject(data);
-                }
-            });
-        });
-    });
-}
-
-function tuLingQuery (text, formattedAddress, userid = 'test') {
-    return new Promise((resolve, reject) => {
-        
-        const postData = JSON.stringify({
-            key: process.env.TULING_KEY,
-            info: text,
-            loc: formattedAddress,
-            userid: userid
-        });
-
-        const req = http.request({
-            hostname: 'www.tuling123.com',
-            port: 80,
-            path: '/openapi/api',
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Content-Length': Buffer.byteLength(postData)
-            }
-        }, (res) => {
-            // console.log(`STATUS: ${res.statusCode}`);
-            // console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
-            let data = '';
-            res.setEncoding('utf8');
-            res.on('data', (chunk) => {
-                // console.log(`BODY: ${chunk}`);
-                data += chunk;
-            });
-            res.on('end', () => {
-                // console.log('No more data in response.');
-                try {
-                    const result = JSON.parse(data);
-                    // console.log(result);
-                    resolve(result);
-                }
-                catch (err) {
-                    reject(data);
-                }
-            });
-        });
-
-        req.on('error', (e) => {
-            console.error(`problem with request: ${e.message}`);
-        });
-
-        req.write(postData);
-        req.end();
-    });
 }
