@@ -39,7 +39,7 @@ var app = new Vue({
 				this.messages.push(message);
 				setTimeout(function () {
 					var content = v.$el.querySelector(".content");
-					content.scrollTop = content.scrollHeight;
+					content.scrollTop = content.scrollHeight - content.querySelector('.kuang:last-child').clientHeight - 50;
 				});
 			});
 			this.newMessageText = null;
@@ -47,11 +47,11 @@ var app = new Vue({
 		replyQa: function (id) {
 			var v = this;
 			this.$http.get('/api/qa/' + id).then(function (data) {
-				console.log(data);
+				// console.log(data);
 				v.messages.push({html: data.body.a});
 				setTimeout(function () {
 					var content = v.$el.querySelector(".content");
-					content.scrollTop = content.scrollHeight;
+					content.scrollTop = content.scrollHeight - content.querySelector('.kuang:last-child').clientHeight - 50;
 				});
 			});
 		}

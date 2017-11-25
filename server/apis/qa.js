@@ -26,7 +26,7 @@ module.exports = (router) => {
                 q: req.body.text
             });
 
-            console.log(esRes.hits.hits.map(hit => [hit._score, hit._source.q]));
+            // console.log(req.body.text, esRes.hits.hits.map(hit => [hit._score, hit._source.q]));
 
             if (esRes.hits.max_score > 18) {
                 reply.qas = esRes.hits.hits.map(hit => Object.assign({_id: hit._id}, hit._source));
