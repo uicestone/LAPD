@@ -123,15 +123,19 @@ html,body{
 	color: #666666;
 	font-size: 14px;
 	line-height: 22px;
+	margin-bottom: 0.5em;
+}
+.content .left .input p:last-child{
+	margin-bottom: 0;
 }
 .content .left .input ul{
 	color: #666666;
-	margin: 1em auto;
+	margin: 0.5em auto;
 	list-style-position: inside;
 }
 .content .left .input ul li{
 	list-style-type: circle;
-	line-height: 1.5;
+	line-height: 22px;
 }
 .content .left .input .jiao{
 	position: absolute;
