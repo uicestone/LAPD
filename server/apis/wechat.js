@@ -98,7 +98,7 @@ module.exports = (router) => {
             // console.log(req.body.text, esRes.hits.hits.map(hit => [hit._score, hit._source.q]));
 
             if (esRes.hits.max_score > 18) {
-                reply.text += "\n\n您是不是想问：\n\n"
+                reply.text = (reply.text.match(/人工服务/) ? '' : reply.text + '\n\n') + "您是不是想问：\n\n"
                 + (esRes.hits.hits.map((hit, index) => {
                     // 暂存hit._id到index+1供查询
                     redisClient.setex(`session_qa_${user.openid}_${index+1}`, 600, hit._id);
