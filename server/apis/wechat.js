@@ -49,7 +49,7 @@ module.exports = (router) => {
                 latitude: message.Latitude,
                 longitude: message.Longitude,
                 precision: message.Precision,
-                time: new Date(message.CreateTime)
+                time: new Date(message.CreateTime * 1000)
             };
 
             user.save();
