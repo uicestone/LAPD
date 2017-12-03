@@ -17,8 +17,13 @@ module.exports = (router) => {
                 return
             }
 
-            const amapResult = await amapRGeo(req.body.location);
-            const formattedAddress = amapResult.regeocode.formatted_address;
+            let formattedAddress;
+
+            if (req.body.location) {
+                const amapResult = await amapRGeo(req.body.location);
+                formattedAddress = amapResult.regeocode.formatted_address;
+            }
+            
             const reply = await tuLingQuery(req.body.text, formattedAddress/*, userid*/);
 
             esRes = await es.search({
