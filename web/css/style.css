@@ -97,6 +97,9 @@ html,body{
 	border-radius: 50%;
 	margin-right:20px;
 }
+.content .left .yonghu-img img{
+	max-width: 100%;
+}
 .content .left .input{
 	max-width: 450px;
 	height: auto;
@@ -159,6 +162,9 @@ html,body{
 	float: right;
 	border-radius: 50%;
 	margin-left:20px;
+}
+.content .right .yonghu-img img{
+	max-width: 100%;
 }
 .content .right .input{
 	max-width: 450px;
