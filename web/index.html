@@ -33,7 +33,7 @@
 			<div class="kuang clearfix" v-for="message in messages">
 				<div class="clearfix" v-bind:class="{ left: !message.fromClient, right: message.fromClient }">
 					<div v-if="!message.fromClient" class="yonghu-img"><img src="images/2_03.png" alt=""></div>
-					<div v-if="message.fromClient" class="yonghu-img"><img src="images/3_07.png" alt=""></div>
+					<div v-if="message.fromClient" class="yonghu-img"><img src="images/avatar_default.png" alt=""></div>
 					<div class="input">
 						<img v-if="!message.fromClient" src="images/6.png" class="jiao" alt="">
 						<p v-if="message.text && !(message.text.match(/人工服务/) && message.qas)">{{ message.text }}</p>
