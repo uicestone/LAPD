@@ -31,7 +31,7 @@
 		<div class="top"><p>星智客服</p></div>
 		<div class="content clearfix">
 			<div class="kuang clearfix" v-for="message in messages">
-				<div class="clearfix" v-bind:class="{ left: !message.fromClient, right: message.fromClient }">
+				<div class="clearfix" v-cloak v-bind:class="{ left: !message.fromClient, right: message.fromClient }">
 					<div v-if="!message.fromClient" class="yonghu-img"><img src="images/2_03.png" alt=""></div>
 					<div v-if="message.fromClient" class="yonghu-img"><img src="images/avatar_default.png" alt=""></div>
 					<div class="input">
