@@ -16,7 +16,7 @@ const { JSDOM }   = require('jsdom');
 const jQuery      = require('jquery');
 const iconvDecode = require('iconv-lite').decode;
 const { Buffer }  = require('buffer');
-const Qa          = require ('./models/qa.js');
+const Qa          = require ('../server/models/qa.js');
 
 env(`${__dirname}/.env`);
 
