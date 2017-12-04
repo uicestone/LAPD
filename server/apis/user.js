@@ -31,7 +31,7 @@ module.exports = (router) => {
 
             // 非管理员，即服务商,只能按provider_token查看用户
             if (req.user.roles.indexOf('admin') === -1) {
-                query.find({'providerTokens.token':req.query.provider_token});
+                res.status(403).json({message: '无权查看用户列表'});
             }
 
             if(req.query.page && !skip) {
@@ -87,14 +87,7 @@ module.exports = (router) => {
 
             try {
 
-                let user;
-
-                if (mongoose.Types.ObjectId.isValid(req.params.userId)) {
-                    user = await User.findById(req.params.userId)
-                }
-                else {
-                    user = await User.findOne({'providerTokens.token':req.params.userId});
-                }
+                const user = await User.findById(req.params.userId)
 
                 // 非管理员，即服务商，只能看到自己对用户提供的增值服务
                 if (req.user.roles.indexOf('admin') === -1) {

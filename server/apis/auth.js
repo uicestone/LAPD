@@ -24,7 +24,7 @@ module.exports = (router) => {
                 return;
             }
 
-            const user = await User.findOne({$or:[{email: req.body.username}, {username: req.body.username}]}).select(['+password', '+token', '+providerTokens']);
+            const user = await User.findOne({$or:[{email: req.body.username}, {username: req.body.username}]}).select(['+password', '+token']);
                 
             if(!user) {
                 res.status(401).json({message: '用户不存在'});
@@ -107,7 +107,7 @@ module.exports = (router) => {
                 return;
             }
 
-            let user = await User.findOne({mobile}).select(['+token', '+providerTokens']);
+            let user = await User.findOne({mobile}).select(['+token']);
 
             if (!user) {
                 user = new User({mobile, roles: ['potential']});
