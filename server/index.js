@@ -24,6 +24,7 @@ app.use(compression());
 
 require(`${__dirname}/apis`)(app, router, io);
 app.use('/', express.static(`${__dirname}/../web`));
+app.use('/admin', express.static(`${__dirname}/../admin/dist`));
 
 const port = process.env.PORT_HTTP;
 const portHttps = process.env.PORT_HTTPS;

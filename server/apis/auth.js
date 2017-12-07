@@ -31,7 +31,7 @@ module.exports = (router) => {
                 return;
             }
 
-            if(user.password !== req.body.password) {
+            if(user.password.toString() !== req.body.password.toString()) {
                 res.status(403).json({message: '密码错误'});
                 return;
             }

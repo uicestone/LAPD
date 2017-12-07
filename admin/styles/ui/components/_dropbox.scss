@@ -1,0 +1,9 @@
+.drop-box {
+	border: 2px #d0d0d0 dashed;
+    padding: 20px;
+    margin: 0 20px 30px;
+
+    &.dragover {
+    	border-color: $brand-success;
+    }
+}
