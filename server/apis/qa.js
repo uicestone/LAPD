@@ -29,7 +29,8 @@ module.exports = (router) => {
             esRes = await es.search({
                 index: 'qa_v1',
                 type: 'qa',
-                q: req.body.text
+                q: req.body.text,
+                size: 20
             });
 
             // console.log(req.body.text, esRes.hits.hits.map(hit => [hit._score, hit._source.q]));

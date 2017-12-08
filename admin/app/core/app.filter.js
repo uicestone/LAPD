@@ -2,7 +2,8 @@
     'use strict';
 
     angular.module('app')
-        .filter('friendlyDisplay', friendlyDisplay);
+        .filter('friendlyDisplay', friendlyDisplay)
+        .filter('htmlToPlainText', htmlToPlainText);
 
     function friendlyDisplay() {
         return function(input) {
@@ -13,6 +14,13 @@
                 return input;
             }
         }
+    }
+
+
+    function htmlToPlainText () {
+        return function(text) {
+            return  text ? String(text).replace(/<[^>]+>/gm, '') : '';
+        };
     }
  
 })(); 

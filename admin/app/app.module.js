@@ -7,6 +7,7 @@
         
         // Custom Feature modules
         ,'app.page'
+        ,'app.qa'
         ,'app.user'
         ,'app.dashboard'
         

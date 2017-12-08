@@ -6,7 +6,7 @@ const qaSchema = new Schema({
     a: String,
     url: String,
     cat: String,
-    tags: String,
+    tags: [String],
     source: Number,
     date: Date
 });

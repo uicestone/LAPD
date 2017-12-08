@@ -4,7 +4,7 @@
     angular.module('app.core')
         .factory('appConfig', [appConfig])
         .config(['$mdThemingProvider', '$mdDateLocaleProvider', mdConfig])
-        .config(['$httpProvider', '$qProvider', '$locationProvider', httpConfig]);
+        .config(['$httpProvider', '$qProvider', '$locationProvider', '$sceProvider', httpConfig]);
 
     function appConfig() {
         var pageTransitionOpts = [
@@ -76,7 +76,7 @@
                 'default': '900'
             })
             .accentPalette('redAlt', {
-                'default': '400'
+                'default': '500'
             })
             .warnPalette('red', {
                 'default': '500'
@@ -98,10 +98,11 @@
         };
     }
 
-    function httpConfig($httpProvider, $qProvider, $locationProvider) {
+    function httpConfig($httpProvider, $qProvider, $locationProvider, $sceProvider) {
         // $locationProvider.html5Mode(true);
         $httpProvider.interceptors.push('httpInterceptorService');
         $qProvider.errorOnUnhandledRejections(false);
+        $sceProvider.enabled(false);
     }
 
 })();

@@ -16,7 +16,7 @@
         .service('socketIoService', socketIoService)
         .service('httpInterceptorService', ['$q', '$window', '$location', '$injector', httpInterceptorService])
         .service('authService', ['$window', 'userService', authService])
-        .service('contractService', ['$resource', 'Upload', contractService])
+        .service('qaService', ['$resource', 'Upload', qaService])
         .service('userService', ['$resource', 'userRolesConstant', userService])
         .constant('userRolesConstant', [
             {name: 'admin', label: '管理员', abilities: ['list-user']}
@@ -95,9 +95,9 @@
         }
     }
 
-    function contractService($resource, Upload) {
+    function qaService($resource, Upload) {
 
-        var contract = $resource(api + 'contract/:id', {id: '@_id'}, {
+        var qa = $resource(api + 'qa/:id', {id: '@_id'}, {
             query: {method: 'GET', isArray: true, interceptor: {response: responseInterceptor}},
             create: {method: 'POST'},
             update: {method: 'PUT'}
@@ -105,7 +105,7 @@
         
         // Angular mix PUT and POST methot to $save,
         // we seperate them to $create and $update here
-        contract.prototype.$save = function (a, b, c, d) {
+        qa.prototype.$save = function (a, b, c, d) {
             if (this._id) {
                 return this.$update(a, b, c, d);
             }
@@ -114,7 +114,7 @@
             }
         }
 
-        contract.import = function (file, data) {
+        qa.import = function (file, data) {
 
             if (!data) {
                 data = {};
@@ -123,12 +123,12 @@
             data.file = file;
             
             return Upload.upload({
-                url: api + 'contract',
+                url: api + 'qa',
                 data: data
             })
         };
 
-        return contract;
+        return qa;
     }
 
     function userService($resource, userRolesConstant) {
