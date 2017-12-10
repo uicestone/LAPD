@@ -22,6 +22,8 @@
                                 <th md-column>姓名</th>
                                 <th md-column>手机号</th>
                                 <th md-column>角色</th>
+                                <th md-column>微信 openid</th>
+                                <th md-column>位置</th>
                             </tr>
                         </thead>
                         <tbody md-body>
@@ -32,6 +34,8 @@
                                 <td md-cell>
                                     <span ng-repeat="role in user.roles" class="label label-primary">{{ roleLabels[role] }}</span>
                                 </td>
+                                <td md-cell>{{ user.openid }}</td>
+                                <td md-cell>{{ user.location.formattedAddress }}</td>
                             </tr>
                         </tbody>
                     </table>

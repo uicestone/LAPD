@@ -1,7 +1,7 @@
 <md-bottom-sheet class="md-list md-has-header">
     <md-subheader ng-cloak>编辑{{ roleLabels[user.roles[0]] }}</md-subheader>
     <form layout="row" ng-submit="updateUser(user)">
-        <div flex="33" layout="column">
+        <div flex="50" layout="column">
             <md-input-container>
                 <label>姓名</label>
                 <input ng-model="user.name" required>
@@ -15,7 +15,7 @@
                 <input ng-model="user.mobile">
             </md-input-container>
         </div>
-        <div flex="33" layout="column">
+        <div flex="50" layout="column">
             <md-input-container>
                 <label>用户名</label>
                 <input ng-model="user.username" autocomplete="off" required>
@@ -30,10 +30,6 @@
                     <md-option ng-repeat="role in roles" value="{{ role.name }}">{{ role.label }}</md-option>
                 </md-select>
             </md-input-container>
-        </div>
-        <div flex="33" layout="column">
-            <div flex ngf-drop ngf-select ng-model="file" class="drop-box" ngf-drag-over-class="'dragover'" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">{{ importStatus }}</div>
-            <div ngf-no-file-drop>不支持拖放上传</div>
         </div>
         <md-button ng-show="userChanged" type="submit" class="md-fab md-fab-corner">
             <md-icon>done</md-icon>

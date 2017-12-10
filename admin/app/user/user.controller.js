@@ -4,7 +4,7 @@
     angular.module('app.user')
     .controller('userListCtrl', ['$scope', '$location', '$route', '$mdBottomSheet', 'userService', 'userRolesConstant', userListCtrl])
     .controller('userDetailCtrl', ['$scope', '$route', 'userService', 'userRolesConstant', userDetailCtrl])
-    .controller('userBottomSheetCtrl', ['$scope', '$route', '$mdBottomSheet', 'contractService', 'userService', 'userRolesConstant', 'user', 'users', 'roleLabels', userBottomSheetCtrl]);
+    .controller('userBottomSheetCtrl', ['$scope', '$route', '$mdBottomSheet', 'userService', 'userRolesConstant', 'user', 'users', 'roleLabels', userBottomSheetCtrl]);
 
     function userListCtrl($scope, $location, $route, $mdBottomSheet, userService, userRolesConstant) {
 
@@ -92,7 +92,7 @@
         };
     }
 
-    function userBottomSheetCtrl ($scope, $route, $mdBottomSheet, contractService, userService, userRolesConstant, user, users, roleLabels) {
+    function userBottomSheetCtrl ($scope, $route, $mdBottomSheet, userService, userRolesConstant, user, users, roleLabels) {
         $scope.user = user;
         $scope.users = users;
         $scope.roles = userRolesConstant;
@@ -112,27 +112,6 @@
             }
         };
 
-        $scope.$watch('file', function () {
-            if ($scope.file != null) {
-                $scope.upload($scope.file);
-            }
-        });
-
-        $scope.importStatus = '批量录入保单信息，请拖放Excel文件到这里，或点击上传';
-
-        $scope.upload = function (file) {
-            if (file.$error) {
-                console.error(file.$error);
-                return;
-            }
-            $scope.importStatus = '正在上传并处理导入，请勿关闭本页';
-            contractService.import(file)
-            .then(function (res) {
-                $scope.importStatus = res.data.message;
-            }, function (res) {
-                $scope.importStatus = res.data.message;
-            });
-        };
     }
 
 })(); 
