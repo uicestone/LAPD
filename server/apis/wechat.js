@@ -6,7 +6,7 @@ const WechatAPI = require('wechat-api');
 const User = require('../models/user.js');
 const Qa = require('../models/qa.js');
 const tuLingQuery = require('../models/tuling.js');
-const { amapRGeo } = require('../models/amap.js');
+const { amapRGeo, amapConvert } = require('../models/amap.js');
 const elasticsearch = require('elasticsearch');
 const redis = require("redis");
 const striptags = require('striptags');
@@ -54,7 +54,8 @@ module.exports = (router) => {
 
             user.save();
 
-            const amapResult = await amapRGeo(`${user.location.longitude},${user.location.latitude}`);
+            const amapLocation = await amapConvert(`${user.location.longitude},${user.location.latitude}`);
+            const amapResult = await amapRGeo(amapLocation);
             user.location.formattedAddress = amapResult.regeocode.formatted_address;
 
             user.save();

@@ -1,7 +1,7 @@
 const Qa = require('../models/qa.js');
 const User = require('../models/user.js');
 const tuLingQuery = require('../models/tuling.js');
-const { amapRGeo } = require('../models/amap.js');
+const { amapRGeo, amapConvert } = require('../models/amap.js');
 const elasticsearch = require('elasticsearch');
 const es = new elasticsearch.Client({
     host: process.env.ELASTIC_URL
@@ -20,8 +20,10 @@ module.exports = (router) => {
             let formattedAddress;
 
             if (req.body.location) {
-                const amapResult = await amapRGeo(req.body.location);
+                const amapLocation = await amapConvert(req.body.location);
+                const amapResult = await amapRGeo(amapLocation);
                 formattedAddress = amapResult.regeocode.formatted_address;
+                console.log(formattedAddress);
             }
             
             const reply = await tuLingQuery(req.body.text, formattedAddress/*, userid*/);
