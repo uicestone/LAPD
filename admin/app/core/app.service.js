@@ -98,6 +98,7 @@
     function qaService($resource, Upload) {
 
         var qa = $resource(api + 'qa/:id', {id: '@_id'}, {
+            get: {method: 'GET'},
             query: {method: 'GET', isArray: true, interceptor: {response: responseInterceptor}},
             create: {method: 'POST'},
             update: {method: 'PUT'}

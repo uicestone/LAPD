@@ -28,6 +28,9 @@
                     .when('/qa/list', {
                         templateUrl: 'app/qa/list.html'
                     })
+                    .when('/qa/:id', {
+                        templateUrl: 'app/qa/detail.html'
+                    })
                     .when('/404', {
                         templateUrl: 'app/page/404.html'
                     })

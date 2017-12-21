@@ -1,0 +1,47 @@
+<div class="page" ng-controller="qaDetailCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-12">
+            <h2 class="section-header">问答详情</h2>
+        </div>
+        <div class="col-md-12">
+            <div class="card bg-white" layout-padding>
+                <form>
+                    <div>
+                        <fieldset layout="row">
+                            <md-input-container>
+                                <label>问题</label>
+                                <input ng-model="qa.q" disabled>
+                            </md-input-container>
+                            <md-input-container layout="row">
+                                <div flex="5"><label>评分</label></div>
+                                <md-slider flex="30" md-discrete ng-model="qa.rating" step="1" min="1" max="5" aria-label="rating">
+                                </md-slider>
+                            </md-input-container>
+                            <md-input-container>
+                                <label>回答</label>
+                                <textarea text-angular ng-model="qa.a"></textarea>
+                            </md-input-container>
+                            <md-input-container>
+                                <label>分类</label>
+                                <input ng-model="qa.cat">
+                            </md-input-container>
+                            <md-input-container>
+                                <label>标签</label>
+                                <input ng-model="qa.tags">
+                            </md-input-container>
+                            <md-input-container>
+                                <label>来源</label>
+                                <input ng-model="qa.source" disabled>
+                            </md-input-container>
+                            <md-input-container>
+                                <label>网址</label>
+                                <input ng-model="qa.url" disabled>
+                            </md-input-container>
+                        </fieldset>
+                    </div>
+                </form>
+                <md-button ng-click="saveQa(qa)" ng-show="qaChanged" class="md-fab md-fab-corner"><md-icon>done</md-icon></md-button>
+            </div>
+        </div>
+    </div>
+</div>

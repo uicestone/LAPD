@@ -2,6 +2,8 @@ const Qa = require('../models/qa.js');
 const User = require('../models/user.js');
 const tuLingQuery = require('../models/tuling.js');
 const { amapRGeo, amapConvert } = require('../models/amap.js');
+const striptags = require('striptags');
+const decode = require('decode-html');
 const elasticsearch = require('elasticsearch');
 const es = new elasticsearch.Client({
     host: process.env.ELASTIC_URL
@@ -63,7 +65,7 @@ module.exports = (router) => {
         })
 
         // get all the qas
-        .get((req, res) =>{
+        .get(async (req, res) =>{
 
             const limit = +req.query.limit || 20;
             let skip = +req.query.skip || 0;
@@ -72,6 +74,21 @@ module.exports = (router) => {
 
             if(req.query.page && !skip) {
                 skip = (req.query.page - 1) * limit;
+            }
+
+            if (req.query.q) {
+                esRes = await es.search({
+                    index: 'qa_v1',
+                    type: 'qa',
+                    q: req.query.q,
+                    size: limit,
+                    from: skip
+                });
+
+                // console.log(req.body.text, esRes.hits.hits.map(hit => [hit._score, hit._source.q]));
+                const qaIds = esRes.hits.hits.map(hit => hit._id);
+                console.log(qaIds);
+                query.find({_id: {$in: qaIds}});
             }
 
             query.count()
@@ -101,6 +118,7 @@ module.exports = (router) => {
         // get the qa with that id
         .get((req, res) =>{
             Qa.findById(req.params.qaId).then(qa => {
+                qa.a = striptags(decode(qa.a), ['a'], '\n').replace(/\n{2,}/g, '\n');
                 res.json(qa);
                 // TODO update user valueAdd count when order is finished
             }).catch(err => {
@@ -110,7 +128,7 @@ module.exports = (router) => {
         })
 
         .put((req, res) => {
-            Qa.findByIdAndUpdate(req.params.userId, req.body, {new: true}).then(qa => {
+            Qa.findByIdAndUpdate(req.params.qaId, req.body, {new: true}).then(qa => {
                 res.json(qa);
             }).catch(err => {
                 console.error(err);

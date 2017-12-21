@@ -3,13 +3,13 @@
         <div class="col-lg-8 clearfix">
             <h2 class="section-header">知识问答</h2>
         </div>
-        <form ng-submit="getUsers()" class="col-lg-12 filters" layout="row">
+        <form ng-submit="search()" class="col-lg-12 filters" layout="row">
             <md-input-container flex>
                 <label>搜索</label>
-                <input ng-model="query.keyword" disabled>
+                <input ng-model="query.q">
             </md-input-container>
             <md-input-container>
-                <md-button ng-disabled="true" type="submit" flex="1" class="md-primary md-raised" style="min-height:29px;min-width:70px"><md-icon>search</md-icon></md-button>
+                <md-button type="submit" flex="1" class="md-primary md-raised" style="min-height:30px;min-width:70px"><md-icon>search</md-icon></md-button>
             </md-input-container>
         </form>
         <div class="col-md-12">
@@ -21,18 +21,20 @@
                                 <th md-column>分类标签</th>
                                 <th md-column>问题</th>
                                 <th md-column style="width:50%">回答</th>
-                                <th md-column style="width:10%">评分</th>
+                                <th md-column style="width:140px">评分</th>
                             </tr>
                         </thead>
                         <tbody md-body>
-                            <tr md-row ng-repeat="qa in qas">
-                                <td md-cell>
+                            <tr md-row ng-repeat="qa in qas" ng-click="showDetail(qa)">
+                                <td md-cell style="padding-top:10px;padding-bottom:10px;line-height:1">
                                     {{ qa.cat}}<br><br>
                                     <span ng-repeat="tag in qa.tags" class="label label-primary">{{ tag }}</span>
                                 </td>
                                 <td md-cell>{{ qa.q }}</td>
                                 <td md-cell ng-bind-html="qa.a | htmlToPlainText" class="ellipsis" style="padding:10px 0"></td>
-                                <td md-cell></td>
+                                <td md-cell>
+                                    <md-slider ng-model="qa.rating" step="1" min="1" max="5" aria-label="rating" ng-click="$event.stopPropagation()" ng-change="saveQa(qa)"></md-slider>
+                                </td>
                             </tr>
                         </tbody>
                     </table>

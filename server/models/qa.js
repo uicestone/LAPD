@@ -8,7 +8,8 @@ const qaSchema = new Schema({
     cat: String,
     tags: [String],
     source: Number,
-    date: Date
+    date: Date,
+    rating: Number
 });
 
 module.exports = mongoose.model('Qa', qaSchema);
