@@ -27,8 +27,11 @@
                         <tbody md-body>
                             <tr md-row ng-repeat="qa in qas" ng-click="showDetail(qa)">
                                 <td md-cell style="padding-top:10px;padding-bottom:10px;line-height:1">
-                                    {{ qa.cat}}<br><br>
-                                    <span ng-repeat="tag in qa.tags" class="label label-primary">{{ tag }}</span>
+                                    {{ qa.cat}}
+                                    <br><br>
+                                    <span ng-repeat="tag in qa.tags">
+                                        <span class="label label-primary">{{ tag }}</span>
+                                    </span>
                                 </td>
                                 <td md-cell>{{ qa.q }}</td>
                                 <td md-cell ng-bind-html="qa.a | htmlToPlainText" class="ellipsis" style="padding:10px 0"></td>
