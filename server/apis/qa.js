@@ -118,7 +118,7 @@ module.exports = (router) => {
     router.route('/qa/:qaId')
 
         // get the qa with that id
-        .get((req, res) =>{
+        .get((req, res) => {
             Qa.findById(req.params.qaId).then(qa => {
                 qa.a = striptags(decode(qa.a), ['a'], '\n').replace(/\n{2,}/g, '\n');
                 res.json(qa);
@@ -131,6 +131,26 @@ module.exports = (router) => {
 
         .put((req, res) => {
             Qa.findByIdAndUpdate(req.params.qaId, req.body, {new: true}).then(qa => {
+                es.index({
+                    index: 'qa_v1',
+                    type: 'qa',
+                    id: qa._id.toString(),
+                    body: {
+                        q: qa.q,
+                        date: qa.date,
+                        source: qa.source,
+                        cat: qa.cat,
+                        tags: qa.tags,
+                        rating: qa.rating
+                    }
+                }, (err, res) => {
+                    if (err) {
+                        console.error(err);
+                    }
+                    else {
+                        console.log(res);
+                    }
+                });
                 res.json(qa);
             }).catch(err => {
                 console.error(err);
