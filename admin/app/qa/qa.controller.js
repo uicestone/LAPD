@@ -18,8 +18,8 @@
         $scope.getQas();
 
         $scope.search = function () {
-            delete $scope.query.page;
-            delete $scope.query.limit;
+            // delete $scope.query.page;
+            // delete $scope.query.limit;
             $location.search($scope.query);
         }
 

@@ -87,28 +87,30 @@ module.exports = (router) => {
 
                 // console.log(req.body.text, esRes.hits.hits.map(hit => [hit._score, hit._source.q]));
                 const qaIds = esRes.hits.hits.map(hit => hit._id);
-                console.log(qaIds);
+                
                 query.find({_id: {$in: qaIds}});
             }
 
-            query.count()
-            .then((total) => {
-                return Promise.all([total,
-                    query.find().limit(limit).skip(skip).exec()
-                ]);
-            })
-            .then((result) => {
-                let [total, page] = result;
+            let total, page;
 
-                if(skip + page.length > total) {
-                    total = skip + page.length;
-                }
+            if (req.query.q) {
+                total = esRes.hits.total;
+                page = await query.find().exec();
+            }
+            else {
+                total = await query.count();
+                page = await query.find().limit(limit).skip(skip).exec();
+            }
 
-                res.set('items-total', total)
+            if(skip + page.length > total) {
+                total = skip + page.length;
+            }
+
+            res.set('items-total', total)
                 .set('items-start', Math.min(skip + 1, total))
                 .set('items-end', Math.min(skip + limit, total))
                 .json(page);
-            });
+
         });
 
     // on routes that end in /qa/:qaId
