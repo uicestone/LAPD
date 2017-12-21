@@ -147,9 +147,6 @@ module.exports = (router) => {
                     if (err) {
                         console.error(err);
                     }
-                    else {
-                        console.log(res);
-                    }
                 });
                 res.json(qa);
             }).catch(err => {
