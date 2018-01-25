@@ -33,12 +33,30 @@ module.exports = (router) => {
             esRes = await es.search({
                 index: 'qa_v1',
                 type: 'qa',
-                q: req.body.text,
-                size: 20
+                size: 20,
+                body: {
+                    query: {
+                        function_score: {
+                            query: {
+                                multi_match: {
+                                    query: req.body.text,
+                                    fields: ['q', 'tags', 'cat']
+                                }
+                            },
+                            field_value_factor: {
+                                field: 'rating',
+                                modifier: 'none',
+                                factor: 1,
+                                missing: 0
+                            },
+                            boost_mode: 'sum'
+                        }
+                    }
+                }
             });
 
             // console.log(req.body.text, esRes.hits.hits.map(hit => [hit._score, hit._source.q]));
-
+            return res.json(esRes.hits.hits);
             if (esRes.hits.max_score > 18) {
                 reply.qas = esRes.hits.hits.map(hit => Object.assign({_id: hit._id}, hit._source));
             }
@@ -80,9 +98,27 @@ module.exports = (router) => {
                 esRes = await es.search({
                     index: 'qa_v1',
                     type: 'qa',
-                    q: req.query.q,
                     size: limit,
-                    from: skip
+                    from: skip,
+                    body: {
+                        query: {
+                            function_score: {
+                                query: {
+                                    multi_match: {
+                                        query: req.query.q,
+                                        fields: ['q', 'tags', 'cat']
+                                    }
+                                },
+                                field_value_factor: {
+                                    field: 'rating',
+                                    modifier: 'none',
+                                    factor: 1,
+                                    missing: 0
+                                },
+                                boost_mode: 'sum'
+                            }
+                        }
+                    }
                 });
 
                 // console.log(req.body.text, esRes.hits.hits.map(hit => [hit._score, hit._source.q]));
