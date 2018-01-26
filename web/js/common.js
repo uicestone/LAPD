@@ -11,6 +11,7 @@ var app = new Vue({
 		navigator.geolocation.getCurrentPosition(function(result){
 			v.location = `${result.coords.longitude.toFixed(6)},${result.coords.latitude.toFixed(6)}`;
 		});
+		localStorage.removeItem('session');
 	},
 	methods: {
 		sendMessage: function (e) {
@@ -28,9 +29,14 @@ var app = new Vue({
 			});
 			this.$http.post('/api/qa/query', {
 				text: this.newMessageText,
-				location: this.location
+				location: this.location,
+				session: localStorage.getItem('session')
 			}).then(function (data) {
 				var message = data.body;
+
+				if (message.session) {
+					localStorage.setItem('session', message.session);
+				}
 				
 				if (message.url) {
 					message.url = data.body.url.match(/https:/) ? data.body.url : '/api/proxy?url=' + encodeURIComponent(data.body.url);

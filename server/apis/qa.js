@@ -1,4 +1,5 @@
 const Qa = require('../models/qa.js');
+const Session = require('../models/session.js');
 const User = require('../models/user.js');
 const tuLingQuery = require('../models/tuling.js');
 const { amapRGeo, amapConvert } = require('../models/amap.js');
@@ -14,21 +15,40 @@ module.exports = (router) => {
 
     router.route('/qa/query')
         .post(async (req, res) => {
-            if (req.body.text.trim() === '0') {
-                res.json({text:'您的专属律师助理即将为您服务…'});
-                return
+
+            let session, queryMessage, replyMessage;
+
+            // find or create session
+            if (req.body.session) {
+                session = await Session.findById(req.body.session);
+            }
+            else {
+                session = new Session({messages: []});
             }
 
+            // switch to service
+            if (req.body.text.trim() === '0') {
+                replyMessage = {text:'您的专属律师助理即将为您服务…', time: new Date()};
+                res.json(replyMessage);
+                session.messages.push(replyMessage);
+                return;
+            }
+
+            queryMessage = {time: new Date(), text: req.body.text, fromClient: true};
+            
             let formattedAddress;
 
             if (req.body.location) {
                 const amapLocation = await amapConvert(req.body.location);
                 const amapResult = await amapRGeo(amapLocation);
                 formattedAddress = amapResult.regeocode.formatted_address;
-                console.log(formattedAddress);
+                queryMessage.location = req.body.location;
+                queryMessage.formattedAddress = formattedAddress;
+                // console.log(formattedAddress);
             }
-            
-            const reply = await tuLingQuery(req.body.text, formattedAddress/*, userid*/);
+
+            // start processing reply
+            replyMessage = await tuLingQuery(req.body.text, formattedAddress/*, userid*/);
 
             esRes = await es.search({
                 index: 'qa_v1',
@@ -55,13 +75,19 @@ module.exports = (router) => {
                 }
             });
 
-            // console.log(req.body.text, esRes.hits.hits.map(hit => [hit._score, hit._source.q]));
-            return res.json(esRes.hits.hits);
-            if (esRes.hits.max_score > 18) {
-                reply.qas = esRes.hits.hits.map(hit => Object.assign({_id: hit._id}, hit._source));
+            console.log(req.body.text, esRes.hits.hits.map(hit => [hit._score, hit._source.q, hit._source.cat, ...hit._source.tags]));
+            if (esRes.hits.max_score > 15) {
+                queryMessage.hitsQa = true;
+                replyMessage.qas = esRes.hits.hits.filter(hit => hit._score > 15).map(hit => Object.assign({_id: hit._id}, hit._source));
             }
 
-            res.json(reply);
+            replyMessage.session = session._id;
+
+            session.messages.push(queryMessage);
+            session.messages.push(replyMessage);
+            session.save();
+
+            res.json(replyMessage);
         });
 
     // Qa CURD
@@ -70,11 +96,12 @@ module.exports = (router) => {
         // create a qa
         .post((req, res) => {
 
-            let user = new User(req.body);      // create a new instance of the User model
+            let qa = new Qa(req.body);      // create a new instance of the Qa model
 
-            // save the user and check for errors
-            user.save().then(user => {
-                res.json(user);
+            // save the qa and check for errors
+            qa.save().then(qa => {
+                res.json(qa);
+                // TODO index in elasticsearch
             }).catch(err => {
                 console.error(err);
                 res.status(500);
@@ -156,6 +183,10 @@ module.exports = (router) => {
         // get the qa with that id
         .get((req, res) => {
             Qa.findById(req.params.qaId).then(qa => {
+                if (!qa) {
+                    res.status(404).send('Qa not found.');
+                    throw `Qa not found: ${req.params.qaId}.`;
+                }
                 qa.a = striptags(decode(qa.a), ['a'], '\n').replace(/\n{2,}/g, '\n');
                 res.json(qa);
                 // TODO update user valueAdd count when order is finished

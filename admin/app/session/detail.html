@@ -1,0 +1,28 @@
+<div class="page" ng-controller="sessionDetailCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">问答记录详情</h2>
+        </div>
+        <div class="col-md-12">
+            <md-card class="no-margin-h">
+                <div class="panel panel-default">
+                    <div class="panel-heading">客户{{ session.user }}的对话记录</div>
+                    <div class="panel-body no-padding">
+                        <md-list layout-padding="">
+                            <md-list-item class="md-3-line" ng-repeat="message in session.messages">
+                                <img ng-src="{{ message.fromClient ? 'assets/images/avatar_default.png' : 'assets/images/avatar_star.png' }}" class="md-avatar" alt="{{message.who}}">
+                                <div class="md-list-item-text">
+                                    <h3>客户</h3>
+                                    <h4>{{ message.time | date:'yyyy-MM-dd HH:mm::ss' }} {{ message.text }}</h4>
+                                    <ul style="margin-top:5px;padding-left:2em">
+                                        <li ng-repeat="qa in message.qas"><a href="#!/qa/{{ qa._id }}">{{ qa.q }}</li>
+                                    </ul>
+                                </div>
+                            </md-list-item>
+                        </md-list>
+                    </div>
+                </div>
+            </md-card>
+        </div>
+    </div>
+</div>

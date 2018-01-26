@@ -3,16 +3,18 @@
 
     angular.module('app')
         .filter('friendlyDisplay', friendlyDisplay)
-        .filter('htmlToPlainText', htmlToPlainText);
+        .filter('htmlToPlainText', htmlToPlainText)
+        .filter('select', select);
 
     function friendlyDisplay() {
         return function(input) {
-            if(typeof input === 'boolean') {
+            if (typeof input === 'boolean') {
                 return input ? '是' : '否';
             }
-            else {
-                return input;
+            if (angular.isArray(input)) {
+                return input.join(', ');
             }
+            return input;
         }
     }
 
@@ -23,6 +25,14 @@
         };
     }
  
+    function select () {
+        return function(array, key) {
+            return array.map(function (item) {
+                return item[key];
+            });
+        };
+    }
+
 })(); 
 
 

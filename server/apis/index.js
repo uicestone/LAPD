@@ -6,6 +6,7 @@ module.exports = (app, router, io) => {
     router = require('./auth.js')(router);
     router = require('./proxy.js')(router);
     router = require('./qa.js')(router);
+    router = require('./session.js')(router);
     router = require('./user.js')(router);
     router = require('./wechat.js')(router);
     app.use('/api', cors({exposedHeaders:['items-total', 'items-start', 'items-end']}), authenticate, router);

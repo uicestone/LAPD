@@ -31,6 +31,12 @@
                     .when('/qa/:id', {
                         templateUrl: 'app/qa/detail.html'
                     })
+                    .when('/session/list', {
+                        templateUrl: 'app/session/list.html'
+                    })
+                    .when('/session/:id', {
+                        templateUrl: 'app/session/detail.html'
+                    })
                     .when('/404', {
                         templateUrl: 'app/page/404.html'
                     })

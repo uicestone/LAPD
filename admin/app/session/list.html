@@ -1,0 +1,45 @@
+<div class="page" ng-controller="sessionListCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">问答记录</h2>
+        </div>
+        <form ng-submit="search()" class="col-lg-12 filters" layout="row">
+            <md-input-container flex>
+                <label>搜索</label>
+                <input ng-model="query.q">
+            </md-input-container>
+            <md-input-container>
+                <md-button type="submit" flex="1" class="md-primary md-raised" style="min-height:30px;min-width:70px"><md-icon>search</md-icon></md-button>
+            </md-input-container>
+        </form>
+        <div class="col-md-12">
+            <md-card class="no-margin-h">
+                <md-table-container>
+                    <table md-table md-progress="promise" style="table-layout:fixed">
+                        <thead md-head md-order="query.order" md-on-reorder="getUsers">
+                            <tr md-row>
+                                <th md-column>首问</th>
+                                <th md-column>首荐</th>
+                                <th md-column>用户</th>
+                                <th md-column>时间</th>
+                            </tr>
+                        </thead>
+                        <tbody md-body>
+                            <tr md-row ng-repeat="session in sessions" ng-click="showDetail(session)">
+                                <td md-cell>{{ getFirstQuestion(session).text }}</td>
+                                <td md-cell style="padding:10px 0">
+                                    <div style="max-height:10vh;overflow-y:auto">
+                                        <p class="ellipsis" style="margin-bottom:0" ng-repeat="qa in getFirstAnswers(session).qas">{{ qa.q }}</p>
+                                    </div>
+                                </td>
+                                <td md-cell>{{ session.messages.user.name }}</td>
+                                <td md-cell>{{ session.messages[0].time | date:'yyyy-MM-dd HH:mm' }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </md-table-container>
+                <md-table-pagination md-limit="query.limit" md-limit-options="[20, 50, 100]" md-page="query.page" md-total="{{ sessions.$total }}" md-on-paginate="search" md-page-select md-label="{of:'/', page:'页码', rowsPerPage:'每页条数'}"></md-table-pagination>
+            </md-card>
+        </div>
+    </div>
+</div>

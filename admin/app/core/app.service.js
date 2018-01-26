@@ -17,6 +17,7 @@
         .service('httpInterceptorService', ['$q', '$window', '$location', '$injector', httpInterceptorService])
         .service('authService', ['$window', 'userService', authService])
         .service('qaService', ['$resource', 'Upload', qaService])
+        .service('sessionService', ['$resource', sessionService])
         .service('userService', ['$resource', 'userRolesConstant', userService])
         .constant('userRolesConstant', [
             {name: 'admin', label: '管理员', abilities: ['list-user']}
@@ -130,6 +131,29 @@
         };
 
         return qa;
+    }
+
+    function sessionService($resource, Upload) {
+
+        var session = $resource(api + 'session/:id', {id: '@_id'}, {
+            get: {method: 'GET'},
+            query: {method: 'GET', isArray: true, interceptor: {response: responseInterceptor}},
+            create: {method: 'POST'},
+            update: {method: 'PUT'}
+        });
+        
+        // Angular mix PUT and POST methot to $save,
+        // we seperate them to $create and $update here
+        session.prototype.$save = function (a, b, c, d) {
+            if (this._id) {
+                return this.$update(a, b, c, d);
+            }
+            else {
+                return this.$create(a, b, c, d);
+            }
+        }
+
+        return session;
     }
 
     function userService($resource, userRolesConstant) {
