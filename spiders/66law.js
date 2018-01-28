@@ -20,7 +20,7 @@ const Qa          = require ('../server/models/qa.js');
 
 env(`${__dirname}/.env`);
 
-mongoose.connect(process.env.MONGODB_URL, {useMongoClient: true});
+mongoose.connect(process.env.MONGODB_URL);
 mongoose.Promise = global.Promise;
 
 async function httpGet (url) {

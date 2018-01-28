@@ -14,7 +14,7 @@ const fs          = require('fs');
 
 env(`${__dirname}/../.env`);
 
-mongoose.connect(process.env.MONGODB_URL, {useMongoClient: true});
+mongoose.connect(process.env.MONGODB_URL);
 mongoose.Promise = global.Promise;
 
 app.use(bodyParser.json());

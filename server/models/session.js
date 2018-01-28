@@ -21,7 +21,7 @@ const sessionSchema = new Schema({
     		time: Date
     	}
     ]
-}, {usePushEach: true});
+});
 
 
 
