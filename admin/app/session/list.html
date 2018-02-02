@@ -34,7 +34,7 @@
                                 <td md-cell style="padding:10px 0">
                                     <div style="max-height:10vh;max-width:25vw;overflow-y:auto">
                                         <p class="ellipsis" style="margin-bottom:0" ng-if="getFirstAnswers(session).qas" ng-repeat="qa in getFirstAnswers(session).qas">{{ qa.q }}</p>
-                                        <p ng-if="!getFirstAnswers(session).qas">{{ getFirstAnswers(session).text }}</p>
+                                        <p class="ellipsis" ng-if="!getFirstAnswers(session).qas">{{ getFirstAnswers(session).text }}</p>
                                     </div>
                                 </td>
                                 <td md-cell>{{ session.messages.user.name }}</td>
