@@ -13,7 +13,7 @@
                                 <img ng-src="{{ message.fromClient ? 'assets/images/avatar_default.png' : 'assets/images/avatar_star.png' }}" class="md-avatar" alt="{{message.who}}">
                                 <div class="md-list-item-text">
                                     <h3>{{ message.fromClient ? '客户' : '小星' }}</h3>
-                                    <h4>{{ message.time | date:'yyyy-MM-dd HH:mm:ss' }} {{ message.text }}</h4>
+                                    <h4 style="white-space:normal">{{ message.time | date:'yyyy-MM-dd HH:mm:ss' }} {{ message.text }}</h4>
                                     <ul style="margin-top:5px;padding-left:2em">
                                         <li ng-repeat="qa in message.qas"><a href="#!/qa/{{ qa._id }}">{{ qa.q }}</li>
                                     </ul>

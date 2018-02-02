@@ -15,7 +15,7 @@
         <div class="col-md-12">
             <md-card class="no-margin-h">
                 <md-table-container>
-                    <table md-table md-progress="promise" style="table-layout:fixed">
+                    <table md-table md-progress="promise">
                         <thead md-head md-order="query.order" md-on-reorder="getUsers">
                             <tr md-row>
                                 <th md-column>首问</th>
@@ -26,10 +26,15 @@
                         </thead>
                         <tbody md-body>
                             <tr md-row ng-repeat="session in sessions" ng-click="showDetail(session)">
-                                <td md-cell>{{ getFirstQuestion(session).text }}</td>
+                                <td md-cell>
+                                    <div style="max-width:25vw">
+                                        <p class="ellipsis" style="margin-bottom:0">{{ getFirstQuestion(session).text }}</p>
+                                    </div>
+                                </td>
                                 <td md-cell style="padding:10px 0">
-                                    <div style="max-height:10vh;overflow-y:auto">
-                                        <p class="ellipsis" style="margin-bottom:0" ng-repeat="qa in getFirstAnswers(session).qas">{{ qa.q }}</p>
+                                    <div style="max-height:10vh;max-width:25vw;overflow-y:auto">
+                                        <p class="ellipsis" style="margin-bottom:0" ng-if="getFirstAnswers(session).qas" ng-repeat="qa in getFirstAnswers(session).qas">{{ qa.q }}</p>
+                                        <p ng-if="!getFirstAnswers(session).qas">{{ getFirstAnswers(session).text }}</p>
                                     </div>
                                 </td>
                                 <td md-cell>{{ session.messages.user.name }}</td>

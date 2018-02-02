@@ -34,13 +34,13 @@
         $scope.getFirstQuestion = function (session) {
             return session.messages.filter(function (message) {
                 return message.hitsQa;
-            })[0] || {};
+            })[0] || session.messages[0];
         }
 
         $scope.getFirstAnswers = function (session) {
             return session.messages.filter(function (message) {
                 return message.qas;
-            })[0] || {};
+            })[0] || session.messages[1];
         }
     }
 
