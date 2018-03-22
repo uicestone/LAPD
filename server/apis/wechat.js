@@ -12,6 +12,8 @@ const redis = require("redis");
 const striptags = require('striptags');
 const decode = require('decode-html');
 
+WechatAPI.patch('inviteKfWorker', 'https://api.weixin.qq.com/customservice/kfaccount/inviteworker');
+
 bluebird.promisifyAll(OAuth.prototype);
 bluebird.promisifyAll(WechatAPI.prototype);
 bluebird.promisifyAll(redis.RedisClient.prototype);
@@ -120,6 +122,28 @@ module.exports = (router) => {
 		const openid = result.data.openid;
 		// console.log(openid);
 	});
+
+    router.route('/wechat/customservice/invite').post(async (req, res) => {
+        
+        const kfList = (await wechatApi.getCustomServiceListAsync()).kf_list;
+        
+        const kfAccount = req.body.kfAccount + '@' + process.env.WECHAT_ACCOUNT,
+            inviteWx = req.body.wxAccount;
+
+        const kfExists = kfList.filter(kf => kf.kf_account === kfAccount)[0];
+
+        if (!kfExists) {
+            const resultAddKfAccount = await wechatApi.addKfAccountAsync(kfAccount, req.body.kfAccount, '000000');
+        }
+
+        if (!kfExists || !kfExists.kf_wx) {
+            await wechatApi.inviteKfWorkerAsync({kf_account: kfAccount, invite_wx: inviteWx});
+        }
+
+        res.json((await wechatApi.getCustomServiceListAsync()).kf_list);
+        const resultCreateKfSession = await wechatApi.createKfSessionAsync('uice@' + process.env.WECHAT_ACCOUNT, 'opdLE1c9EVo_li85J4HPuH7S248A');
+        console.log(resultCreateKfSession);
+    });
 
     return router;
 };

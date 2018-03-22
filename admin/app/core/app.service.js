@@ -19,6 +19,7 @@
         .service('qaService', ['$resource', 'Upload', qaService])
         .service('sessionService', ['$resource', sessionService])
         .service('userService', ['$resource', 'userRolesConstant', userService])
+        .service('wechatService', ['$http', wechatService])
         .constant('userRolesConstant', [
             {name: 'admin', label: '管理员', abilities: ['list-user']}
         ]);
@@ -199,6 +200,16 @@
         }
         
         return user;
-    }    
+    }
+
+    function wechatService($http) {
+        this.inviteKf = function (wxAccount, kfAccount) {
+            console.log(wxAccount, kfAccount);
+            $http.post(api + 'wechat/customservice/invite', {
+                kfAccount: kfAccount,
+                wxAccount: wxAccount
+            });
+        }
+    }   
 
 })(); 

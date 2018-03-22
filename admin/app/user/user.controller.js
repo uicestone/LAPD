@@ -3,7 +3,7 @@
 
     angular.module('app.user')
     .controller('userListCtrl', ['$scope', '$location', '$route', '$mdBottomSheet', 'userService', 'userRolesConstant', userListCtrl])
-    .controller('userDetailCtrl', ['$scope', '$route', 'userService', 'userRolesConstant', userDetailCtrl])
+    .controller('userDetailCtrl', ['$scope', '$route', 'userService', 'wechatService', 'userRolesConstant', userDetailCtrl])
     .controller('userBottomSheetCtrl', ['$scope', '$route', '$mdBottomSheet', 'userService', 'userRolesConstant', 'user', 'users', 'roleLabels', userBottomSheetCtrl]);
 
     function userListCtrl($scope, $location, $route, $mdBottomSheet, userService, userRolesConstant) {
@@ -46,7 +46,7 @@
 
     }
 
-    function userDetailCtrl($scope, $route, userService, userRolesConstant) {
+    function userDetailCtrl($scope, $route, userService, wechatService, userRolesConstant) {
 
         $scope.user = userService.get({id:$route.current.params.id});
 
@@ -68,28 +68,9 @@
             user.$save();
         };
 
-        $scope.editLog = function (log) {
-            if(!log) {
-                log = new logService();
-                log.user = $scope.user;
-            }
-
-            $scope.log = log;
-
-            $mdBottomSheet.show({
-                templateUrl: 'app/user/log-bottom-sheet.html',
-                scope: $scope,
-                preserveScope: true
-            });
-        };
-
-        $scope.updateLog = function (log) {
-            $mdBottomSheet.hide();
-            log.$save();
-            if(!log._id) {
-                $scope.logs.push(log);
-            }
-        };
+        $scope.inviteKf = function (wxAccount, kfAccount) {
+            wechatService.inviteKf(wxAccount, kfAccount);
+        }
     }
 
     function userBottomSheetCtrl ($scope, $route, $mdBottomSheet, userService, userRolesConstant, user, users, roleLabels) {

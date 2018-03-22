@@ -6,6 +6,7 @@ const userSchema = new Schema({
     password: {type: String, select: false},
     token: {type: String, select: false},
     openid: String,
+    wxAccount: String,
     roles: [String],
     name: String,
     gender: String,
