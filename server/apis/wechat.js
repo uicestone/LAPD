@@ -64,7 +64,8 @@ module.exports = (router) => {
         }
 
         if (message.Content === '0') {
-            return res.reply('您的专属律师助理即将为您服务…');
+            // return res.reply('您的专属律师助理即将为您服务…');
+            return res.reply({type:'transfer_customer_service'});
         }
         else if (message.Content > 0 && message.Content <= 10) {
             const qaId = await redisClient.getAsync(`session_qa_${user.openid}_${message.Content}`);
