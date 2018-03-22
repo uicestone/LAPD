@@ -9,7 +9,7 @@ module.exports = (router) => {
         .post((req, res) => {
 
             let session = new Session(req.body);      // create a new instance of the Session model
-
+            session.startedAt = new Date();
             // save the session and check for errors
             session.save().then(session => {
                 res.json(session);
@@ -30,6 +30,15 @@ module.exports = (router) => {
 
             if(req.query.page && !skip) {
                 skip = (req.query.page - 1) * limit;
+            }
+
+            if(req.query.orderBy) {
+                query.sort({
+                    [req.query.orderBy]: (req.query.order === 'desc' || req.query.order === 'false' || Number(req.query.order) < 0 ? 'desc' : 'asc')
+                });
+            }
+            else {
+                query.sort({startedAt:-1});
             }
 
             let total = await query.count();

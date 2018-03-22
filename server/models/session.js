@@ -20,7 +20,8 @@ const sessionSchema = new Schema({
     		formattedAddress: String,
     		time: Date
     	}
-    ]
+    ],
+    startedAt: Date
 });
 
 
