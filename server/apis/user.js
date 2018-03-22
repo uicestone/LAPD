@@ -50,6 +50,11 @@ module.exports = (router) => {
                     roles: {$in: roles}
                 });
             }
+            else {
+                query.find({
+                    roles: {$exisis:true}
+                });
+            }
 
             query.count()
             .then((total) => {
