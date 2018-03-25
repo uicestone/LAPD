@@ -5,6 +5,7 @@ const wechat = require('wechat');
 const WechatAPI = require('wechat-api');
 const User = require('../models/user.js');
 const Qa = require('../models/qa.js');
+const Session = require('../models/session.js');
 const tuLingQuery = require('../models/tuling.js');
 const { amapRGeo, amapConvert } = require('../models/amap.js');
 const elasticsearch = require('elasticsearch');
@@ -38,12 +39,21 @@ module.exports = (router) => {
         const message = req.weixin;
         console.log('Message received', message);
 
+        let session, queryMessage, replyMessage;
+
         // 根据openid创建或获得用户
         let user = await User.findOne({openid: message.FromUserName});
 
         if (!user) {
             user = new User({ openid: message.FromUserName });
             user.save();
+        }
+
+        // find or create session
+        session = await Session.findOne({user: user._id});
+        
+        if (!session) {
+            session = new Session({messages: [], user: user._id, startedAt: new Date()});
         }
 
         if (message.Event === 'LOCATION') {
@@ -75,6 +85,8 @@ module.exports = (router) => {
                 return res.reply();
             }
 
+            replyMessage = {text: qa.a, time: new Date()};
+
             // console.log('full answer: ', striptags(decode(qa.a), ['a'], '\n'));
 
             striptags(decode(qa.a), ['a'], '\n').replace(/\n{2,}/g, '\n').splitMaxBytes(2048).reduce((p, chunk) => {
@@ -91,6 +103,9 @@ module.exports = (router) => {
             return res.reply();
         }
         else if (message.Content) {
+
+            queryMessage = {text: message.Content, time: new Date()};
+
             esRes = await es.search({
                 index: 'qa_v1',
                 type: 'qa',
@@ -98,12 +113,13 @@ module.exports = (router) => {
             });
 
             const reply = await tuLingQuery(message.Content, user.location.formattedAddress, user.openid);
+            replyMessage = Object.assign({}, reply);
 
             // console.log(req.body.text, esRes.hits.hits.map(hit => [hit._score, hit._source.q]));
 
-            if (esRes.hits.max_score > 18) {
+            if (esRes.hits.max_score > 15) {
                 reply.text = (reply.text.match(/人工服务/) ? '' : reply.text + '\n\n') + "您是不是想问：\n\n"
-                + (esRes.hits.hits.map((hit, index) => {
+                + (esRes.hits.hits.filter(hit => hit._score > 15).map((hit, index) => {
                     // 暂存hit._id到index+1供查询
                     redisClient.setex(`session_qa_${user.openid}_${index+1}`, 600, hit._id);
                     return `${index+1}. ${hit._source.q}？`;
@@ -111,18 +127,25 @@ module.exports = (router) => {
                 + "\n\n回复“0”转人工服务";
             }
 
+            replyMessage.qas = esRes.hits.hits.filter(hit => hit._score > 15).map(hit => Object.assign({_id: hit._id}, hit._source));
+            replyMessage.session = session._id;
+
+            session.messages.push(queryMessage);
+            session.messages.push(replyMessage);
+            session.save();
+
             res.reply(reply.text);
         }
 
     }));
     
-	router.route('/wechat/oauth/:code').get(async (req, res) => {
-		const code = req.params.code;
-		const result = await wechatClient.getAccessTokenAsync(code);
-		const accessToken = result.data.access_token;
-		const openid = result.data.openid;
-		// console.log(openid);
-	});
+    router.route('/wechat/oauth/:code').get(async (req, res) => {
+        const code = req.params.code;
+        const result = await wechatClient.getAccessTokenAsync(code);
+        const accessToken = result.data.access_token;
+        const openid = result.data.openid;
+        // console.log(openid);
+    });
 
     router.route('/wechat/customservice/invite').post(async (req, res) => {
         

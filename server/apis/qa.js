@@ -23,7 +23,7 @@ module.exports = (router) => {
                 session = await Session.findById(req.body.session);
             }
             else {
-                session = new Session({messages: []});
+                session = new Session({messages: [], startedAt: new Date()});
             }
 
             // switch to service
@@ -48,7 +48,7 @@ module.exports = (router) => {
             }
 
             // start processing reply
-            replyMessage = await tuLingQuery(req.body.text, formattedAddress/*, userid*/);
+            replyMessage = await tuLingQuery(req.body.text, formattedAddress, session._id);
 
             esRes = await es.search({
                 index: 'qa_v1',
