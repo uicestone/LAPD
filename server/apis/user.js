@@ -52,7 +52,7 @@ module.exports = (router) => {
             }
             else {
                 query.find({
-                    roles: {$exists:true}
+                    roles: {$gt:[]}
                 });
             }
 
