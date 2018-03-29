@@ -5,7 +5,7 @@
         </div>
         <div class="col-md-12">
             <md-card class="no-margin-h">
-                <div class="panel panel-default">
+                <div class="panel panel-default no-margin">
                     <div class="panel-heading">客户{{ session.user }}的对话记录</div>
                     <div class="panel-body no-padding">
                         <md-list layout-padding="">
@@ -15,11 +15,14 @@
                                     <h3>{{ message.fromClient ? '客户' : '小星' }}</h3>
                                     <h4 style="white-space:normal">{{ message.time | date:'yyyy-MM-dd HH:mm:ss' }} {{ message.text }}</h4>
                                     <ul style="margin-top:5px;padding-left:2em">
-                                        <li ng-repeat="qa in message.qas"><a href="#!/qa/{{ qa._id }}">{{ qa.q }}</li>
+                                        <li ng-repeat="qa in message.qas"><a href="#!/qa/{{ qa._id }}">{{ qa.q }}</a></li>
                                     </ul>
                                 </div>
                             </md-list-item>
                         </md-list>
+                        <div layout="row" layout-align="end center" class="md-padding">
+                            <md-button ng-click="removeSession()" class="md-warn">删除问答记录</md-button>
+                        </div>
                     </div>
                 </div>
             </md-card>

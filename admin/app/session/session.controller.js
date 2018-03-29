@@ -3,7 +3,7 @@
 
     angular.module('app.session')
     .controller('sessionListCtrl', ['$scope', '$location', '$route', '$mdBottomSheet', 'sessionService', sessionListCtrl])
-    .controller('sessionDetailCtrl', ['$scope', '$location', '$route', '$mdBottomSheet', 'sessionService', sessionDetailCtrl]);
+    .controller('sessionDetailCtrl', ['$scope', '$location', '$window', '$route', '$mdBottomSheet', 'sessionService', sessionDetailCtrl]);
 
     function sessionListCtrl($scope, $location, $route, $mdBottomSheet, sessionService) {
 
@@ -44,11 +44,18 @@
         }
     }
 
-    function sessionDetailCtrl($scope, $location, $route, $mdBottomSheet, sessionService) {
+    function sessionDetailCtrl($scope, $location, $window, $route, $mdBottomSheet, sessionService) {
         $scope.session = sessionService.get({id: $route.current.params.id});
         
         $scope.saveSession = function () {
             $scope.session.$save();
+        }
+
+        $scope.removeSession = function () {
+            if (confirm('确定永久删除这个咨询记录吗？')) {
+                $window.history.back();
+                $scope.session.$remove();
+            }
         }
 
         $scope.$watch('session', function (newValue, oldValue) {

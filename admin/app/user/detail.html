@@ -23,6 +23,11 @@
                         </md-list-item>
                     </md-list>
                 </div>
+                <div class="card-action">
+                    <input ng-model="user.wxAccount" placeholder="微信号" style="width:70px">
+                    <input ng-model="user.kfAccount" placeholder="客服号" style="width:70px">
+                    <button ng-click="inviteKf(user.wxAccount, user.kfAccount)">邀请绑定客服</button>
+                </div>
             </div>
         </div>
         <div class="col-md-8">
