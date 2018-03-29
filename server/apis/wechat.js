@@ -33,6 +33,14 @@ const es = new elasticsearch.Client({
 });
 const redisClient = redis.createClient();
 
+async function sleep (milliseconds) {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve();
+        }, milliseconds);
+    });
+}
+
 module.exports = (router) => {
     
     router.route('/wechat').all(wechat(wechatConfig, async (req, res, next) => {
@@ -49,8 +57,18 @@ module.exports = (router) => {
             user.save();
         }
 
+        if (['SCAN', 'subscribe'].indexOf(message.Event) > -1 && message.EventKey.match(/session_/)) {
+            const sessionId = message.EventKey.replace(/^qrscene_/, '').replace(/^session_/, '');
+            session = Session.findById(sessionId);
+            const sendResult = await wechatApi.sendTextAsync(user.openid, '请回复“0”接入人工服务');
+            await sleep(500);
+            return res.reply({type:'transfer_customer_service'});
+        }
+
         // find or create session
-        session = await Session.findOne({user: user._id});
+        if (!session) {
+            session = await Session.findOne({user: user._id});
+        }
         
         if (!session) {
             session = new Session({messages: [], user: user._id, startedAt: new Date()});
@@ -136,6 +154,8 @@ module.exports = (router) => {
 
             res.reply(reply.text);
         }
+
+        res.end();
 
     }));
     
