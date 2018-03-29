@@ -44,7 +44,7 @@
 								<a v-on:click="replyQa(qa._id)">{{ qa.q }}？</a>
 							</li>
 						</ul>
-						<p v-if="message.qas || message.html">回复“0”转人工服务</p>
+						<p v-if="(message.qas || message.html) && !message.transferCustomService"><br>回复“0”转人工服务</p>
 						<img v-if="message.fromClient" src="images/6_07.png" class="jiao" alt="">
 						<iframe v-if="message.url" v-bind:src="message.url" style="border:none; height:35vh; max-width:100%;"></iframe>
 					</div>

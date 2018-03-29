@@ -1,6 +1,8 @@
+const bluebird = require('bluebird');
 const Qa = require('../models/qa.js');
 const Session = require('../models/session.js');
 const User = require('../models/user.js');
+const WechatAPI = require('wechat-api');
 const tuLingQuery = require('../models/tuling.js');
 const { amapRGeo, amapConvert } = require('../models/amap.js');
 const striptags = require('striptags');
@@ -10,6 +12,10 @@ const es = new elasticsearch.Client({
     host: process.env.ELASTIC_URL
     // log: 'trace'
 });
+
+bluebird.promisifyAll(WechatAPI.prototype);
+
+const wechatApi = new WechatAPI(process.env.WECHAT_APP_ID, process.env.WECHAT_APP_SECRET);
 
 module.exports = (router) => {
 
@@ -22,15 +28,19 @@ module.exports = (router) => {
             if (req.body.session) {
                 session = await Session.findById(req.body.session);
             }
-            else {
+            
+            if (!session) {
                 session = new Session({messages: [], startedAt: new Date()});
             }
 
             // switch to service
             if (req.body.text.trim() === '0') {
-                replyMessage = {text:'您的专属律师助理即将为您服务…', time: new Date()};
+                const qrTicket = await wechatApi.createTmpQRCodeAsync(`session_${session._id}`, 600);
+                const qrUrl = wechatApi.showQRCodeURL(qrTicket.ticket);
+
+                replyMessage = {html:`微信扫描以下二维码，进入人工服务：<br><img src="${qrUrl}" width="100%">`, time: new Date(), transferCustomService: true};
                 res.json(replyMessage);
-                session.messages.push(replyMessage);
+                // session.messages.push(replyMessage);
                 return;
             }
 
