@@ -70,7 +70,14 @@ module.exports = (router) => {
 
         if (['SCAN', 'subscribe'].indexOf(message.Event) > -1 && message.EventKey.match(/session_/)) {
             const sessionId = message.EventKey.replace(/^qrscene_/, '').replace(/^session_/, '');
+            
             session = Session.findById(sessionId);
+            
+            if (session) {
+                session.user = user;
+                session.save();
+            }
+            
             if (message.Event === 'SCAN') {
                 wechatApi.sendText(user.openid, '您的专属律师助理即将为您服务…');
                 return res.reply({type:'transfer_customer_service'});
