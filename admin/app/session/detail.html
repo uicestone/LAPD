@@ -6,7 +6,7 @@
         <div class="col-md-12">
             <md-card class="no-margin-h">
                 <div class="panel panel-default no-margin">
-                    <div class="panel-heading">客户{{ session.user }}的对话记录</div>
+                    <div class="panel-heading">客户{{ session.user ? ' ' + session.user.name + ' ' : '' }}的对话记录</div>
                     <div class="panel-body no-padding">
                         <md-list layout-padding="">
                             <md-list-item class="md-3-line" ng-repeat="message in session.messages">

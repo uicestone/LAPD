@@ -68,7 +68,7 @@ module.exports = (router) => {
 
         // get the session with that id
         .get((req, res) => {
-            Session.findById(req.params.sessionId).populate({path: 'messages.qas', select: 'q'}).then(session => {
+            Session.findById(req.params.sessionId).populate('user').populate({path: 'messages.qas', select: 'q'}).then(session => {
                 if (!session) {
                     res.status(404).send('Session not found.');
                     throw `Session not found: ${req.params.sessionId}.`;
