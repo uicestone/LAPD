@@ -60,9 +60,12 @@ module.exports = (router) => {
         if (['SCAN', 'subscribe'].indexOf(message.Event) > -1 && message.EventKey.match(/session_/)) {
             const sessionId = message.EventKey.replace(/^qrscene_/, '').replace(/^session_/, '');
             session = Session.findById(sessionId);
-            const sendResult = await wechatApi.sendTextAsync(user.openid, '请回复“0”接入人工服务');
-            await sleep(500);
-            return res.reply({type:'transfer_customer_service'});
+            if (message.Event === 'SCAN') {
+                wechatApi.sendText(user.openid, '您的专属律师助理即将为您服务…');
+                return res.reply({type:'transfer_customer_service'});
+            } else {
+                return res.reply('您刚刚关注，请发送“0”接入人工服务。');
+            }
         }
 
         // find or create session
