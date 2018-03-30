@@ -57,6 +57,17 @@ module.exports = (router) => {
             user.save();
         }
 
+        if (!user.name) {
+            wechatApi.getUserAsync(message.FromUserName)
+            .then(userInfo => {
+                user.name = userInfo.nickname;
+                user.gender = !userInfo.sex ? '未知' : (userInfo.sex === 2 ? '男' : '女');
+                user.region = `${userInfo.country} ${userInfo.province} ${userInfo.city}`;
+                user.avatar = userInfo.headimgurl;
+                user.save();
+            });
+        }
+
         if (['SCAN', 'subscribe'].indexOf(message.Event) > -1 && message.EventKey.match(/session_/)) {
             const sessionId = message.EventKey.replace(/^qrscene_/, '').replace(/^session_/, '');
             session = Session.findById(sessionId);

@@ -43,6 +43,7 @@ module.exports = (router) => {
 
             let total = await query.count();
             let page = await query.find()
+            .populate('user')
             .populate({path: 'messages.qas', select: 'q'})
             .limit(limit).skip(skip).exec();
 

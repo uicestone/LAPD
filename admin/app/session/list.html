@@ -37,7 +37,7 @@
                                         <p class="ellipsis" ng-if="!getFirstAnswers(session).qas">{{ getFirstAnswers(session).text }}</p>
                                     </div>
                                 </td>
-                                <td md-cell>{{ session.messages.user.name }}</td>
+                                <td md-cell>{{ session.user.name }}</td>
                                 <td md-cell>{{ session.startedAt | date:'yyyy-MM-dd HH:mm' }}</td>
                             </tr>
                         </tbody>
