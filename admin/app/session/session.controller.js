@@ -17,6 +17,18 @@
 
         $scope.getSessions();
 
+        $scope.refreshSessionsIfDocumentVisible = function(){
+            if (document.visibilityState === 'visible') {
+                $scope.getSessions();
+            }
+        };
+
+        document.addEventListener('visibilitychange', $scope.refreshSessionsIfDocumentVisible, false);
+
+        $scope.$on('$destroy', function () {
+            document.removeEventListener('visibilitychange', $scope.refreshSessionsIfDocumentVisible);
+        });
+
         $scope.search = function () {
             // delete $scope.query.page;
             // delete $scope.query.limit;
